@@ -10,7 +10,7 @@ var urlDatabase = {
 };
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase};
+  let templateVars = { shortURL: req.params.shortURL, longURL: req.params.urlDatabase};
   res.render("urls_show", templateVars);
 });
 
