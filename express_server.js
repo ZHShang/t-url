@@ -32,6 +32,12 @@ app.post("/urls", (req, res) => {
   res.redirect('/urls/'+key);
 });
 
+app.post("/urls/:shortURL/delete", (req, res) => {
+  let idDeleted = req.params.shortURL;
+  delete urlDatabase[idDeleted];
+  res.redirect('/urls');
+});
+
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
