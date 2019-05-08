@@ -14,11 +14,17 @@ function generateRandomString() {
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
-};
+}
 
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
+
+app.post("/urls/:shortURL", (req, res) =>{
+  urlDatabase[req.params.shortURL] = req.body.longURL
+  res.redirect('/urls');
+});
+
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
@@ -37,6 +43,9 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[idDeleted];
   res.redirect('/urls');
 });
+
+
+
 
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
