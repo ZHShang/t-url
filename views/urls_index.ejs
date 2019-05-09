@@ -12,10 +12,10 @@
 <body style="font-size:20px; padding:50px;">
     <!-- Add EJS code here -->
 
-      <% for(key in urls){ %>
-          Full URL is <%= urls[key] %> and the Short URL is <%=key%>
-            <a href='urls/<%=key%>'> Edit</a>
-            <form method="POST" class="form-inline" action="/urls/<%=key%>/delete">
+      <% for(url in urls) { %>
+          Full URL is <%= urls[url].longURL %> and the Short URL is <%=url%>
+            <a href='urls/<%=url%>'> Edit</a>
+            <form method="POST" class="form-inline" action="/urls/<%=url%>/delete">
               <button type="delete" class="btn btn-primary">Delete</button>
 
             </form>

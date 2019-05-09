@@ -26,17 +26,33 @@ const users = {
   }
 } ;
 
+const urlDatabase = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" }
+};
+
 function findUserByEmail(email){
+
   for (var userKey in users) {
     if(users[userKey].email === email){
       return userKey;
     }
   }
-}
+};
 
-var urlDatabase = {
-
+function urlsForUser(id){
+  let matchedURLs = {};
+  for(shortURL in urlDatabase){
+    if( urlDatabase[shortURL]["userID"] === id){
+      matchedURLs[shortURL] = { longURL : urlDatabase[shortURL].longURL}
+  }
 }
+  return matchedURLs;;
+};
+
+
+app.get("/", (req, res) => {
+  res.redirect('/urls')
+});
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {user: users[req.cookies["user_ID"]]};
@@ -45,11 +61,12 @@ app.get("/urls/new", (req, res) => {
   } else {
     res.redirect('/login');
   }
-
 });
 
 app.post("/urls/:shortURL", (req, res) =>{
-  urlDatabase[req.params.shortURL] = req.body.longURL
+  urlDatabase[req.params.shortURL]["longURL"] = req.body.longURL;
+  urlDatabase[req.params.shortURL]["userID"] = req.cookies["user_ID"];
+  console.log(urlDatabase)
   res.redirect('/urls');
 });
 
@@ -111,13 +128,13 @@ app.get("/register", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
+    longURL: urlDatabase[req.params.shortURL]["longURL"],
     user: users[req.cookies["user_ID"]]};
   res.render("urls_show", templateVars);
 });
 
 app.post("/urls", (req, res) => {
-  let value = req.body.longURL;
+  let value = {longURL: req.body.longURL, userID: req.cookies["user_ID"]}
   let key = generateRandomString();
   urlDatabase[key] = value;
   res.redirect('/urls/'+key);
@@ -136,7 +153,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-   urls: urlDatabase,
+   urls: urlsForUser(req.cookies["user_ID"]),
    user: users[req.cookies["user_ID"]]
  };
   res.render("urls_index", templateVars);
