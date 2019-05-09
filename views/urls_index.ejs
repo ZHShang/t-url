@@ -14,10 +14,11 @@
     <ul>
       <% for(key in urls){ %>
           <li>Full URL is <%= urls[key] %> and the Short URL is <%=key%>
-            <a href='urls/<%=key%>'> Edit</a>
+            <a href='urls/<%=key%>'> Edit</a></li>
             <form method="POST" class="form-inline" action="/urls/<%=key%>/delete">
-            <button type="delete" class="btn btn-primary">Delete</button></form>
-          </li>
+              <button type="delete" class="btn btn-primary">Delete</button>
+            </form>
+
       <% } %>
     </ul>
 </body>
