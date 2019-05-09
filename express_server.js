@@ -1,3 +1,4 @@
+
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser")
 var express = require("express");
@@ -25,17 +26,10 @@ const users = {
   }
 } ;
 
-
-function checkEmail(email){
-  for (var user in users) {
-    if(users[user].email === email){
-      return true;
-
 function findUserByEmail(email){
   for (var userKey in users) {
     if(users[userKey].email === email){
       return userKey;
-
     }
   }
 }
@@ -46,7 +40,12 @@ var urlDatabase = {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {user: users[req.cookies["user_ID"]]};
-  res.render("urls_new", templateVars);
+  if(templateVars['user']){
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect('/login');
+  }
+
 });
 
 app.post("/urls/:shortURL", (req, res) =>{
@@ -55,7 +54,8 @@ app.post("/urls/:shortURL", (req, res) =>{
 });
 
 app.get("/login", (req, res) => {
-  res.render("urls_login");
+  let templateVars = {user: users[req.cookies["user_ID"]]};
+  res.render("urls_login", templateVars);
 })
 
 app.post("/login", (req, res) => {
@@ -83,20 +83,12 @@ app.post("/logout", (req, res) => {
  res.redirect('/urls/');
 });
 
-app.get("/register", (req, res) => {
-   res.render("urls_register");
-})
-
 app.post("/register", (req, res) =>{
   let userID = generateRandomString();
   let userEmail =req.body.email;
   if ( userEmail === "" || req.body.password === ""){
     res.status(400).send("Please enter a valid email or username");
-
-  } else if( checkEmail(userEmail) === true){
-
   } else if( findUserByEmail(userEmail)){
-
     res.status(400).send("Email already exists!");
   } else {
   let userObj = {
@@ -110,14 +102,12 @@ app.post("/register", (req, res) =>{
   res.redirect("/urls");
 }});
 
-
 app.get("/register", (req, res) => {
   let templateVars = {
     user: users[req.cookies["user_ID"]]
   };
    res.render("urls_register", templateVars);
 })
-
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL,
