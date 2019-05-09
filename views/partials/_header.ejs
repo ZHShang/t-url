@@ -5,9 +5,14 @@
 </style>
 
 <h1>TinyApp</h1>
+
 <a href='http://localhost:8080/urls/new'> Create New TinyURL</a>
+|
+<a href='http://localhost:8080/urls'>URLs</a>
+
 <p>
   <% if (user) { %>
+  Logged In As: <%= user.email %>
    <form method="POST" class="form-inline" action="/logout">
     <button type="submit" class="btn btn-primary">Log Out</button>
    </form>
