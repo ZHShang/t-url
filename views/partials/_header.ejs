@@ -1,15 +1,23 @@
+<style>
+  ss{
+    float: right;
+  }
+</style>
+
 <h1>TinyApp</h1>
+
 <a href='http://localhost:8080/urls/new'> Create New TinyURL</a>
+|
+<a href='http://localhost:8080/urls'>URLs</a>
 
-<% if(username) {%>
-  <h3>Your username: <%=username%></h3>
-   <form method="POST" class="form-inline" action="/logout/">
-    <button type="delete" class="btn btn-primary">Log Out</button></form>
-  <%} else{ %>
-<form method="POST" class="form-inline" action="/login/" style="width: 300px; margin: 1em">
-         <label for="username">Enter a username:</label>
-         <input class="form-control" type="text" name="username" placeholder="Your Username" style="width: 300px; margin: 1em">
-         <button type="submit" class="button">Submit</button>
-       </form>
-<% } %>
-
+<p>
+  <% if (user) { %>
+  Logged In As: <%= user.email %>
+   <form method="POST" class="form-inline" action="/logout">
+    <button type="submit" class="btn btn-primary">Log Out</button>
+   </form>
+   <% } else {%>
+   <P><a href='http://localhost:8080/register'> Register</a></p>
+   <p><a href='http://localhost:8080/login'>Log In</a></p>
+   <% } %>
+ </p>
