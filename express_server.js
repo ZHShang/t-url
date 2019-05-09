@@ -7,10 +7,31 @@ var PORT = 8080; // default port 8080
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(cookieParser());
+
 function generateRandomString() {
   return Math.random().toString(36).substr(2, 6);
 }
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+} ;
+
+function checkEmail(email){
+  for (var user in users) {
+    if(users[user].email === email){
+      return true;
+    }
+  }
+}
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -37,6 +58,28 @@ app.post("/logout", (req, res) => {
  res.redirect('/urls/');
 });
 
+app.get("/register", (req, res) => {
+   res.render("urls_register");
+})
+
+app.post("/register", (req, res) =>{
+  let userID = generateRandomString();
+  let userEmail =req.body.email;
+  if ( userEmail === "" || req.body.password === ""){
+    res.status(400).send("Please enter a valid email or username");
+  } else if( checkEmail(userEmail) === true){
+    res.status(400).send("Email already exists!");
+  } else {
+  let userObj = {
+    id: userID,
+    email: userEmail,
+    password: req.body.password
+  };
+  users[userID] = userObj;
+  console.log(users[userID].email);
+  res.cookie("user_ID", userID);
+  res.redirect("/urls");
+}});
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL,
@@ -57,9 +100,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[idDeleted];
   res.redirect('/urls');
 });
-
-
-
 
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
