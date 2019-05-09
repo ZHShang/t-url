@@ -64,10 +64,13 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) =>{
-  urlDatabase[req.params.shortURL]["longURL"] = req.body.longURL;
-  urlDatabase[req.params.shortURL]["userID"] = req.cookies["user_ID"];
-  console.log(urlDatabase)
-  res.redirect('/urls');
+  if(req.cookies.user_id === urlDatabase[req.params.shortURL].userID){
+       urlDatabase[req.params.shortURL]["longURL"] = req.body.longURL;
+       urlDatabase[req.params.shortURL]["userID"] = req.cookies["user_ID"];
+       res.redirect('/urls');
+  } else {
+  res.send("You do not have permission")
+  }
 });
 
 app.get("/login", (req, res) => {
@@ -141,14 +144,18 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  let idDeleted = req.params.shortURL;
-  delete urlDatabase[idDeleted];
-  res.redirect('/urls');
+  if(req.cookies.user_id === urlDatabase[req.params.shortURL].userID){
+    let idDeleted = req.params.shortURL;
+    delete urlDatabase[idDeleted];
+    res.redirect('/urls');
+  } else {
+    res.send("you don't have permission");
+  };
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+  const longURL = urlDatabase[shortURL].longURL;
+  res.redirect('http://' + longURL);
 })
 
 app.get("/urls", (req, res) => {
