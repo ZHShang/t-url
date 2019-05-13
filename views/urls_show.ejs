@@ -12,6 +12,7 @@
 <body style="font-size:20px; padding:50px;">
     <ul>
           <li>Your full URL is <%= longURL%>
+          <li>Your short URL is <%= shortURL%>
             <form class="form-inline" action="/urls/<%=shortURL%>" method="POST">
 
               <label for="longURL">Enter an updated URL:</label>
