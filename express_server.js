@@ -1,6 +1,5 @@
 
 const bodyParser = require("body-parser"); //importing various middlewares
-const cookieParser = require("cookie-parser");
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 var express = require("express");
@@ -9,7 +8,6 @@ var PORT = 8080; // default port 8080
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-app.use(cookieParser());
 app.use(cookieSession({
   name: 'session',
   keys: ['key1'],
@@ -193,9 +191,9 @@ app.post("/urls", (req, res) => {//stores longURL and that user's ID with the ke
 });
 
 app.get("/u/:shortURL", (req, res) => { //making sure that other users can use the generated short URL
-  if(longURL){//checks if the longURL exists
     const shortURL = urlDatabase[req.params.shortURL];
     const longURL = shortURL.longURL;
+  if(longURL){//checks if the longURL exists
     res.redirect('http://' + longURL);//sets the http:// in case the users forget the entire link
   } else{
     res.send("Please make sure you typed it in correctly!");
