@@ -194,7 +194,7 @@ app.get("/u/:shortURL", (req, res) => { //making sure that other users can use t
     const shortURL = urlDatabase[req.params.shortURL];
     const longURL = shortURL.longURL;
   if(longURL){//checks if the longURL exists
-    res.redirect('http://' + longURL);//sets the http:// in case the users forget the entire link
+    res.redirect(longURL);//sets the http:// in case the users forget the entire link
   } else{
     res.send("Please make sure you typed it in correctly!");
   }
